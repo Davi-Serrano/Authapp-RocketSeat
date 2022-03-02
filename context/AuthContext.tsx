@@ -1,8 +1,9 @@
+import Router from "next/router";
 import { createContext, ReactNode, useState } from "react";
 import { api } from "../services/api";
 
 type User = {
-    email: string;]
+    email: string;
     permissions: string[],
     roles: string[];
 
@@ -15,6 +16,7 @@ type SingInCredentials = {
 
 type AuthContextData = {
     singIn(credentials: SingInCredentials): Promise<void>;
+    user: User;
     isAuthenticated: boolean;
 };
 
@@ -26,22 +28,23 @@ export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({children}: AuthProviderProps){
     const [user, setUser]= useState<User>()
-    const isAuthenticated = false;
+    const isAuthenticated = !!user;
     
     async function singIn({email, password}: SingInCredentials){
        try {
-            const response = api.post('sessions', {
+            const response = await api.post('sessions', {
                 email,
                 password
             })
             
-            const { permissions , roles } = response
-
+            const { permissions, roles } = response.data
             setUser({
                 email,
                 permissions,
                 roles
             })
+
+            Router.push("/dashboard")
        } catch (err) {
             console.log(err)
        }
@@ -49,7 +52,7 @@ export function AuthProvider({children}: AuthProviderProps){
     
 
     return (
-        <AuthContext.Provider value={{ singIn , isAuthenticated }}>
+        <AuthContext.Provider value={{ singIn , isAuthenticated, user}}>
             {children}
         </AuthContext.Provider>
     )

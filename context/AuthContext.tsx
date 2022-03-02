@@ -1,5 +1,12 @@
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode, useState } from "react";
 import { api } from "../services/api";
+
+type User = {
+    email: string;]
+    permissions: string[],
+    roles: string[];
+
+}
 
 type SingInCredentials = {
     email: string;
@@ -18,6 +25,7 @@ type AuthProviderProps = {
 export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({children}: AuthProviderProps){
+    const [user, setUser]= useState<User>()
     const isAuthenticated = false;
     
     async function singIn({email, password}: SingInCredentials){
@@ -26,7 +34,14 @@ export function AuthProvider({children}: AuthProviderProps){
                 email,
                 password
             })
-            console.log(response)
+            
+            const { permissions , roles } = response
+
+            setUser({
+                email,
+                permissions,
+                roles
+            })
        } catch (err) {
             console.log(err)
        }

@@ -1,7 +1,6 @@
-import { rejects } from "assert";
 import axios, { AxiosError } from "axios"
 import { parseCookies, setCookie } from "nookies";
-import { resolve } from "path/posix";
+import { singOut } from "../context/AuthContext";
 
 let cookies = parseCookies();
 let isRefresh = false;
@@ -68,7 +67,9 @@ api.interceptors.response.use(response => {
                 })
             });
         } else {
-            //deslogar usuario
+            singOut()
         }
     }
+
+    return Promise.reject(error);
 })

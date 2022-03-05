@@ -2,7 +2,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies"
 import Router from "next/router";
 
-import { api } from "../services/api";
+import { api } from "../services/apiClient";
 
 type User = {
     email: string;
@@ -82,6 +82,8 @@ export function AuthProvider({children}: AuthProviderProps){
             })
 
             api.defaults.headers['Authorization'] = `Bearer ${token}` 
+
+            console.log(response.data)
 
             Router.push("/dashboard")
        } catch (err) {

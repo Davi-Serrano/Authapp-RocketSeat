@@ -7,7 +7,7 @@ import { api } from "../services/apiClient"
 import  {withSSRAuth  } from "../utils/withSSRAuth"
 
 export default function Dashboard(){
-    const { user } = useContext(AuthContext)
+    const { user, singOut } = useContext(AuthContext)
 
     const useCanSeeMetrics = useCan({
         permissions: ['metrics.list']
@@ -26,6 +26,7 @@ export default function Dashboard(){
          <Can permissions={['metrics.list']}>
              <h2>Métricas</h2> 
         </Can>
+        <button onClick={singOut}>Sing Out</button>
         </>
     )
 }
